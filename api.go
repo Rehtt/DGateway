@@ -15,8 +15,15 @@ var (
 	registerExpiration = 11 * time.Minute
 )
 
-func uriKey(method, path string) string {
-	return fmt.Sprintf("URI|%s|%s", strings.ToTitle(method), path)
+type Mode byte
+
+const (
+	EQ    = Mode('E') // 完全匹配
+	Match = Mode('M') // 正则匹配
+)
+
+func uriKey(method, path string, mode Mode) string {
+	return fmt.Sprintf("URI|%c|%s|%s", mode, strings.ToTitle(method), path)
 }
 
 func dgApi() {
@@ -57,7 +64,11 @@ func register(ctx *goweb.Context) {
 
 	var errs []string
 	for _, route := range body.Routes {
-		key := uriKey(route.Method, route.Uri)
+		var mode = EQ
+		if route.Match {
+			mode = Match
+		}
+		key := uriKey(route.Method, route.Uri, mode)
 		if value := rdb.Get(ctx, key).Val(); value == "" || jsoniter.Get([]byte(value), "uid").ToString() == body.Uid {
 			rdb.Set(ctx, key, newb, registerExpiration)
 			continue

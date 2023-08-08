@@ -10,4 +10,5 @@ type Register struct {
 type Route struct {
 	Method string `json:"method"`
 	Uri    string `json:"uri"`
+	Match  bool   `json:"match"` // 正则匹配
 }

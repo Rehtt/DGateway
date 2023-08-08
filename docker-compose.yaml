@@ -9,6 +9,7 @@ services:
       - default
     ports:
       - 8080:80
+      - 8001:8001
     environment:
       RDB_ADDR: redis:6379
 #      RDB_DB: 1
