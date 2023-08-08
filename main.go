@@ -12,10 +12,12 @@ import (
 )
 
 var (
-	Version string
+	baseVersion = "v0.0.1"
+	Version     string
 )
 
 func init() {
+	Version = baseVersion + "-" + Version
 	showVersion := flag.Bool("v", false, "version")
 	redisAddr := flag.String("rdb_addr", util.Getenv("RDB_ADDR", "127.0.0.1:6379"), "redis connect addr")
 	redisPassword := flag.String("rdb_password", util.Getenv("RDB_PASSWORD", ""), "redis password")

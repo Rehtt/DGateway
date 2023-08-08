@@ -15,12 +15,29 @@ var (
 	registerExpiration = 11 * time.Minute
 )
 
+func uriKey(method, path string) string {
+	return fmt.Sprintf("URI|%s|%s", strings.ToTitle(method), path)
+}
+
 func dgApi() {
 	g := goweb.New()
-	g.POST("/api/reg", register)
+	api := g.Grep("/api")
+	api.POST("/reg", register)
+	api.GET("/list", listUri)
 	if err := http.ListenAndServe(":8001", g); err != nil {
 		panic(err)
 	}
+}
+func listUri(ctx *goweb.Context) {
+	keys := rdb.Keys(ctx, "URI|*").Val()
+	if len(keys) == 0 {
+		return
+	}
+	var out = make([]model.Register, len(keys))
+	for i, k := range keys {
+		jsoniter.UnmarshalFromString(rdb.Get(ctx, k).Val(), &out[i])
+	}
+	ctx.WriteJSON(out)
 }
 func register(ctx *goweb.Context) {
 	var body model.Register
@@ -35,12 +52,12 @@ func register(ctx *goweb.Context) {
 	if body.Scheme == "" {
 		body.Scheme = "http"
 	}
-	body.Remote = body.Scheme + "://" + strings.Split(ctx.Request.RemoteAddr, ":")[0] + ":" + strconv.Itoa(body.Port)
+	body.RemoteBase = body.Scheme + "://" + strings.Split(ctx.Request.RemoteAddr, ":")[0] + ":" + strconv.Itoa(body.Port)
 	newb, _ := jsoniter.MarshalToString(body)
 
 	var errs []string
 	for _, route := range body.Routes {
-		key := fmt.Sprintf("%s|%s", strings.ToTitle(route.Method), route.Uri)
+		key := uriKey(route.Method, route.Uri)
 		if value := rdb.Get(ctx, key).Val(); value == "" || jsoniter.Get([]byte(value), "uid").ToString() == body.Uid {
 			rdb.Set(ctx, key, newb, registerExpiration)
 			continue

@@ -1,18 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Rehtt/DGateway/model"
 	goweb "github.com/Rehtt/Kit/web"
 	jsoniter "github.com/json-iterator/go"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"strings"
 )
 
 func gateway(ctx *goweb.Context) {
-	key := fmt.Sprintf("%s|%s", strings.ToTitle(ctx.Request.Method), ctx.Request.URL.Path)
+	key := uriKey(ctx.Request.Method, ctx.Request.URL.Path)
 	value := rdb.Get(ctx, key).Val()
 	if value == "" {
 		ctx.Writer.WriteHeader(http.StatusNotFound)
@@ -24,7 +22,7 @@ func gateway(ctx *goweb.Context) {
 		ctx.WriteJSON(&model.Response{Error: err.Error()}, http.StatusBadRequest)
 		return
 	}
-	p, err := NewProxy(tmp.Remote)
+	p, err := NewProxy(tmp.RemoteBase)
 	if err != nil {
 		ctx.WriteJSON(&model.Response{Error: err.Error()}, http.StatusBadGateway)
 		return
