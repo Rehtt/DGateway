@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dgateway/model"
 	"fmt"
+	"github.com/Rehtt/DGateway/model"
 	goweb "github.com/Rehtt/Kit/web"
 	jsoniter "github.com/json-iterator/go"
 	"net/http"

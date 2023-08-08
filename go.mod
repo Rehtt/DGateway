@@ -1,4 +1,4 @@
-module dgateway
+module github.com/Rehtt/DGateway
 
 go 1.20
 
