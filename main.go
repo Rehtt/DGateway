@@ -44,7 +44,7 @@ func main() {
 	go dgApi()
 
 	g := goweb.New()
-	g.Any("/#", gateway)
+	g.Any("/#...", gateway)
 	if err := http.ListenAndServe(":80", g); err != nil {
 		panic(err)
 	}
