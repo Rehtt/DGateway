@@ -10,7 +10,7 @@ services:
     ports:
       - 8080:80
     environment:
-      RDB_ADDR: reids:6379
+      RDB_ADDR: redis:6379
 #      RDB_DB: 1
 #      RDB_USERNAME: username
 #      RDB_PASSWORD: password
