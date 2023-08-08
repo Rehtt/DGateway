@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/Rehtt/Kit v0.1.6-alpha.2.0.20230808023031-1ce243f49845 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

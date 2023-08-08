@@ -1,0 +1,22 @@
+version: '3'
+services:
+  DGateway:
+    container_name: DGateway
+    image: 'rehtt/dgateway'
+    networks:
+      - dgateway_net
+      - redis
+      - default
+    ports:
+      - 8080:80
+    environment:
+      RDB_ADDR: reids:6379
+#      RDB_DB: 1
+#      RDB_USERNAME: username
+#      RDB_PASSWORD: password
+
+networks:
+  dgateway_net:
+    external: true
+  redis:
+    external: true
