@@ -7,10 +7,12 @@ import (
 
 var rdb *redis.Client
 
-func InitRedis() error {
+func InitRedis(addr, username, password string, db int) error {
 	rdb = redis.NewClient(&redis.Options{
-		Addr: "127.0.0.1:6379",
-		DB:   1,
+		Addr:     addr,
+		DB:       db,
+		Username: username,
+		Password: password,
 	})
 	return rdb.Ping(context.Background()).Err()
 }

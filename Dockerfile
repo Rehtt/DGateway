@@ -4,15 +4,14 @@ COPY . /build
 WORKDIR /build
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
-    apk add --no-cache git
+    apk add --no-cache git make
 RUN export GOPROXY=https://goproxy.cn && \
     VERSION=$(git describe --tags --always) && \
-	go mod tidy && \
-    go build -o run -tags=jsoniter -ldflags "-X main.Version=$VERSION" .
+	make build
 
 FROM alpine:3.18
 
-COPY --from=builder /build/run /app/run
+COPY --from=builder /build/bin/run /app/run
 
 WORKDIR /app
 

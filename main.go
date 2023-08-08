@@ -15,18 +15,25 @@ var (
 
 func init() {
 	showVersion := flag.Bool("v", false, "version")
+	redisAddr := flag.String("rdb_addr", "127.0.0.1:6379", "redis connect addr")
+	redisPassword := flag.String("rdb_password", "", "redis password")
+	redisUsername := flag.String("rdb_username", "", "redis username")
+	redisDB := flag.Int("rdb_db", 0, "redis db")
 	flag.Parse()
 	if *showVersion {
 		fmt.Println(Version)
 		os.Exit(0)
 	}
+	if err := InitRedis(*redisAddr, *redisUsername, *redisPassword, *redisDB); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-	log.Println("run")
-	if err := InitRedis(); err != nil {
-		panic(err)
-	}
+	log.Println("DGateway - Rehtt")
+	log.Println("version:", Version)
+	log.Println("running")
+
 	go dgApi()
 
 	g := goweb.New()
