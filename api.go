@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Rehtt/DGateway/model"
+	"github.com/Rehtt/DGateway/utils"
 	goweb "github.com/Rehtt/Kit/web"
 	jsoniter "github.com/json-iterator/go"
 	"net/http"
@@ -14,17 +15,6 @@ import (
 var (
 	registerExpiration = 11 * time.Minute
 )
-
-type Mode byte
-
-const (
-	EQ    = Mode('E') // 完全匹配
-	Match = Mode('M') // 正则匹配
-)
-
-func uriKey(method, path string, mode Mode) string {
-	return fmt.Sprintf("URI|%c|%s|%s", mode, strings.ToTitle(method), path)
-}
 
 func dgApi() {
 	g := goweb.New()
@@ -64,11 +54,11 @@ func register(ctx *goweb.Context) {
 
 	var errs []string
 	for _, route := range body.Routes {
-		var mode = EQ
+		var mode = utils.EQ
 		if route.Match {
-			mode = Match
+			mode = utils.Match
 		}
-		key := uriKey(route.Method, route.Uri, mode)
+		key := utils.UriKey(route.Method, route.Uri, mode)
 		if value := rdb.Get(ctx, key).Val(); value == "" || jsoniter.Get([]byte(value), "uid").ToString() == body.Uid {
 			rdb.Set(ctx, key, newb, registerExpiration)
 			continue

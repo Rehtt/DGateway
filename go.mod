@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/Rehtt/Kit v0.1.6-alpha.2.0.20230808023031-1ce243f49845
-	github.com/Rehtt/Kit/web v0.0.0-20230808084835-315794999aa8
+	github.com/Rehtt/Kit/web v0.0.0-20230809031853-bba0d9c181c9
 	github.com/json-iterator/go v1.1.12
 	github.com/redis/go-redis/v9 v9.0.5
 )

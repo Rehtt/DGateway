@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Rehtt/DGateway/model"
+	"github.com/Rehtt/DGateway/utils"
 	goweb "github.com/Rehtt/Kit/web"
 	jsoniter "github.com/json-iterator/go"
 	"net/http"
@@ -12,10 +13,10 @@ import (
 )
 
 func gateway(ctx *goweb.Context) {
-	key := uriKey(ctx.Request.Method, ctx.Request.URL.Path, EQ)
+	key := utils.UriKey(ctx.Request.Method, ctx.Request.URL.Path, utils.EQ)
 	value := rdb.Get(ctx, key).Val()
 	if value == "" {
-		key = uriKey(ctx.Request.Method, "*", Match)
+		key = utils.UriKey(ctx.Request.Method, "*", utils.Match)
 		var ok bool
 		for _, v := range rdb.Keys(ctx, key).Val() {
 			if s := strings.Split(v, "|"); len(s) == 4 {
